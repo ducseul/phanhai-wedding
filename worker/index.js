@@ -64,7 +64,7 @@ export default {
         if (location.origin !== "https://script.googleusercontent.com") {
           return error("Chưa thể kết nối kho dữ liệu.", 502);
         }
-        upstream = await fetch(location, { redirect: "error", signal: AbortSignal.timeout(8000) });
+        upstream = await fetch(location.href, { redirect: "manual", signal: AbortSignal.timeout(8000) });
       }
       if (!upstream.ok) return error("Chưa thể kết nối kho dữ liệu.", 502);
       return reply(env, await upstream.json());
