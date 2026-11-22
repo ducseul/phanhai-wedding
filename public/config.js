@@ -109,6 +109,6 @@ window.WEDDING = {
     guestPhotosLink: "https://photos.app.goo.gl/...",
   },
 
-  sheetsEndpoint: "",
+  sheetsEndpoint: "https://script.google.com/macros/s/AKfycbyhg4v1_zrO048IjklDIF7EvT8-DX_JDztAZvCoXNdxC3v_fwbf_ivyeASBu_9mfJQ-/exec",
   closingText: "Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!",
 };
