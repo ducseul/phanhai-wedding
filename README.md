@@ -15,7 +15,7 @@ Chủ thiệp quản lý dữ liệu trực tiếp trong bảng tính:
 | --- | --- |
 | RSVP | Xem xác nhận, số điện thoại và ghi chú. Có thể tải CSV từ menu Tệp của Google Sheets. |
 | Lời chúc | Đặt `status` thành `published` để hiển thị hoặc `hidden` để ẩn. |
-| Ảnh khách | Mở ảnh theo cột `file_id` trong Drive. Đặt `status` thành `published` để hiển thị hoặc `hidden` để ẩn. |
+| Ảnh khách | Mở ảnh trong thư mục Drive `Thiệp cưới Phan Hải & Thanh Hoài - Ảnh khách`, hoặc nối giá trị cột `file_id` vào `https://drive.google.com/open?id=`. Đặt `status` thành `published` để hiển thị hoặc `hidden` để ẩn. |
 
 Lời chúc và ảnh mới có trạng thái `pending`. Ảnh được chuyển thành JPEG tối đa 600 KB trước khi gửi. Album hiển thị 60 ảnh đã duyệt mới nhất. Trang `/quan-ly/` dẫn chủ thiệp tới Google Sheets để quản lý bằng quyền của tài khoản Google.
 
