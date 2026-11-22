@@ -5,6 +5,7 @@ const TABLES = {
 };
 const MAX_PHOTO = 600 * 1024;
 const PROPS = PropertiesService.getScriptProperties();
+const RSVP_TAB_NAME = 'Xác nhận tham dự';
 const SHEET_LAYOUT = {
   RSVP: { color: '#80344D', tint: '#FBF0F3', widths: [280, 155, 200, 145, 135, 115, 115, 230, 310],
     headers: ['Mã phản hồi', 'Giờ gửi (VN)', 'Họ và tên', 'Số điện thoại', 'Tham dự', 'Số khách', 'Bên gia đình', 'Lễ tham dự', 'Lời nhắn'] },
@@ -19,7 +20,7 @@ function formatWeddingSheets() {
   const book = SpreadsheetApp.openById(PROPS.getProperty('SHEET_ID'));
   book.setSpreadsheetTimeZone('Asia/Ho_Chi_Minh');
   for (const [name, layout] of Object.entries(SHEET_LAYOUT)) {
-    const tab = book.getSheetByName(name);
+    const tab = findDataTab_(book, name);
     if (!tab || !tab.getLastRow()) continue;
     const width = layout.headers.length;
     const rows = tab.getMaxRows();
@@ -129,7 +130,7 @@ function setup() {
   const book = SpreadsheetApp.openById(sheetId);
   book.setSpreadsheetTimeZone('Asia/Ho_Chi_Minh');
   for (const [name, columns] of Object.entries(TABLES)) {
-    const tab = book.getSheetByName(name) || book.insertSheet(name);
+    const tab = findDataTab_(book, name) || book.insertSheet(name === 'RSVP' ? RSVP_TAB_NAME : name);
     if (tab.getLastRow()) continue;
     tab.getRange(1, 1, 1, columns.length).setValues([columns]).setFontWeight('bold');
     tab.setFrozenRows(1);
@@ -216,7 +217,12 @@ function doPost(e) {
 }
 
 function sheet_(name) {
-  return SpreadsheetApp.openById(PROPS.getProperty('SHEET_ID')).getSheetByName(name);
+  return findDataTab_(SpreadsheetApp.openById(PROPS.getProperty('SHEET_ID')), name);
+}
+
+function findDataTab_(book, name) {
+  if (name === 'RSVP') return book.getSheetByName(RSVP_TAB_NAME) || book.getSheetByName(name);
+  return book.getSheetByName(name);
 }
 
 function published_(name, limit) {

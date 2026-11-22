@@ -13,7 +13,7 @@ Chủ thiệp quản lý dữ liệu trực tiếp trong bảng tính:
 
 | Trang tính | Cách dùng |
 | --- | --- |
-| RSVP | Xem xác nhận, số điện thoại và ghi chú. Có thể tải CSV từ menu Tệp của Google Sheets. |
+| Xác nhận tham dự | Xem xác nhận, số điện thoại và ghi chú. Có thể tải CSV từ menu Tệp của Google Sheets. |
 | Lời chúc | Đặt `status` thành `published` để hiển thị hoặc `hidden` để ẩn. |
 | Ảnh khách | Mở ảnh trong thư mục Drive `Thiệp cưới Phan Hải & Thanh Hoài - Ảnh khách`, hoặc nối giá trị cột `file_id` vào `https://drive.google.com/open?id=`. Đặt `status` thành `published` để hiển thị hoặc `hidden` để ẩn. |
 
