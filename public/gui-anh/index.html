@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Gửi ảnh ngày vui</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Ms+Madi&family=Viaoda+Libre&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="page subpage">
+    <a class="back" href="/">‹ Quay lại thiệp</a>
+    <h1 class="section-title" style="margin-top:4px">GỬI ẢNH NGÀY VUI</h1>
+    <p class="section-sub">Chọn một hoặc nhiều ảnh (tối đa 20 ảnh mỗi lần)</p>
+    <form id="up-form" class="form">
+      <input name="name" maxlength="60" placeholder="Tên của bạn" required />
+      <label class="drop">
+        <input type="file" id="files" accept="image/*" multiple />
+        <b>Chạm để chọn ảnh</b><br /><span class="section-sub" style="display:block">Ảnh sẽ được thu nhỏ trước khi gửi cho nhanh</span>
+      </label>
+      <div class="preview" id="preview"></div>
+      <button class="btn btn-wine" type="submit">GỬI ẢNH</button>
+      <p class="form-msg" id="msg"></p>
+    </form>
+    <p style="margin-top:1.5rem"><a class="btn btn-cream" href="/album-khach/">XEM ALBUM</a></p>
+  </main>
+  <script src="/config.js"></script>
+  <script src="/sheets-api.js"></script>
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const filesInput = $("#files"), msg = $("#msg");
+    const guest = new URLSearchParams(location.search).get("to");
+    if (guest) $("#up-form").name.value = guest;
+    filesInput.onchange = () => {
+      $("#preview").innerHTML = "";
+      [...filesInput.files].slice(0, 20).forEach((f) => { const im = new Image(); im.src = URL.createObjectURL(f); $("#preview").append(im); });
+    };
+    async function encodePhoto(file) {
+      const src = URL.createObjectURL(file);
+      try {
+        const img = new Image();
+        img.src = src;
+        try { await img.decode(); }
+        catch { throw new Error("Không đọc được ảnh. Vui lòng chọn ảnh JPEG, PNG hoặc WebP."); }
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d", { alpha: false });
+        for (const max of [1600, 1200, 900, 640]) {
+          const scale = Math.min(1, max / Math.max(img.width, img.height));
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const jpeg = canvas.toDataURL("image/jpeg", 0.82).split(",")[1];
+          if (jpeg && jpeg.length <= 819200) return jpeg;
+        }
+        throw new Error("Ảnh quá lớn để gửi.");
+      } finally { URL.revokeObjectURL(src); }
+    }
+    $("#up-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const files = [...filesInput.files].slice(0, 20);
+      if (!files.length) { msg.textContent = "Bạn chưa chọn ảnh nào."; msg.classList.add("error"); return; }
+      const btn = e.target.querySelector("button"); btn.disabled = true; msg.classList.remove("error");
+      let ok = 0;
+      for (const [i, f] of files.entries()) {
+        msg.textContent = `Đang gửi ảnh ${i + 1}/${files.length}...`;
+        try {
+          await window.weddingApi("photo", { name: e.target.name.value.trim(), jpeg: await encodePhoto(f) });
+          ok++;
+        } catch (err) {
+          msg.textContent = ok ? `Đã gửi ${ok} ảnh. ${err.message}` : err.message;
+          msg.classList.add("error");
+          break;
+        }
+      }
+      btn.disabled = false;
+      if (ok) {
+        const remaining = new DataTransfer();
+        files.slice(ok).forEach((file) => remaining.items.add(file));
+        filesInput.files = remaining.files;
+        filesInput.onchange();
+      }
+      if (ok === files.length) msg.textContent = `Đã gửi ${ok} ảnh. Ảnh sẽ xuất hiện trong album sau khi được duyệt.`;
+    };
+  </script>
+</body>
+</html>

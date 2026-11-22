@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Album khách mời</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Ms+Madi&family=Viaoda+Libre&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="page subpage">
+    <a class="back" href="/">‹ Quay lại thiệp</a>
+    <h1 class="section-title" style="margin-top:4px">ALBUM KHÁCH MỜI</h1>
+    <p class="section-sub" id="count">Đang tải...</p>
+    <div class="grid-album" id="grid"></div>
+    <p style="margin-top:1.5rem"><a class="btn btn-wine" href="/gui-anh/">GỬI THÊM ẢNH</a></p>
+  </main>
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lb-close" aria-label="Đóng">×</button>
+    <img id="lb-img" class="lb-img" alt="" />
+  </div>
+  <script src="/config.js"></script>
+  <script src="/sheets-api.js"></script>
+  <script>
+    const lb = document.getElementById("lightbox");
+    lb.onclick = () => (lb.hidden = true);
+    const count = document.getElementById("count");
+    const grid = document.getElementById("grid");
+    const observer = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (!isIntersecting) continue;
+        observer.unobserve(target);
+        window.weddingApi("photo", null, { id: target.dataset.id }).then(({ jpeg }) => {
+          if (!/^\/9j\/[A-Za-z0-9+/]+={0,2}$/.test(jpeg)) throw new Error("Ảnh không hợp lệ");
+          target.src = "data:image/jpeg;base64," + jpeg;
+          target.onclick = () => { document.getElementById("lb-img").src = target.src; lb.hidden = false; };
+        }).catch(() => { target.alt = "Chưa tải được ảnh"; });
+      }
+    }, { rootMargin: "100px" });
+    window.weddingApi("photos").then((list) => {
+      count.textContent = list.length ? `${list.length} ảnh từ quý khách` : "Chưa có ảnh đã duyệt.";
+      for (const { id, name } of list) {
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        const caption = document.createElement("figcaption");
+        img.dataset.id = id;
+        img.alt = "Ảnh khách gửi";
+        caption.textContent = name;
+        figure.append(img, caption);
+        grid.append(figure);
+        observer.observe(img);
+      }
+    }).catch((error) => { count.textContent = error.message; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Bỏ ảnh QR chụp từ app ngân hàng vào đây (vd: chu-re.png, co-dau.png) rồi điền qrImage trong config.js
