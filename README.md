@@ -19,6 +19,14 @@ Chủ thiệp quản lý dữ liệu trực tiếp trong bảng tính:
 
 Lời chúc và ảnh mới có trạng thái `pending`. Ảnh được chuyển thành JPEG tối đa 600 KB trước khi gửi. Album hiển thị 60 ảnh đã duyệt mới nhất. Trang `/quan-ly/` dẫn chủ thiệp tới Google Sheets để quản lý bằng quyền của tài khoản Google.
 
+Bảng tính hiển thị thời gian giờ Việt Nam, dùng màu theo trạng thái và ẩn cột mã kỹ thuật trong các tab chính. Chạy `formatWeddingSheets` trong Apps Script để áp dụng lại định dạng cho dữ liệu đã có. Apps Script chặn nội dung trùng trong khoảng một phút và giữ giới hạn tổng số lượt ghi.
+
+### Giới hạn lượt gửi theo IP
+
+1. Triển khai `worker/wrangler.toml` bằng Wrangler. Worker dùng IP do Cloudflare cấp và giới hạn khoảng 6 lượt RSVP hoặc lời chúc cộng lại mỗi phút, cùng 20 lượt ảnh riêng mỗi phút cho mỗi IP tại một điểm hiện diện Cloudflare.
+2. Cài bí mật ngẫu nhiên `WRITE_GATEWAY_SECRET` cho Worker bằng `wrangler secret put`. Khi Worker hoạt động, đặt URL `/submit` vào `submitEndpoint` trong `public/config.js` và phát hành GitHub Pages.
+3. Sau khi kiểm tra site đã gửi qua Worker, đặt cùng bí mật trong **Thuộc tính tập lệnh** của Apps Script. Apps Script sẽ từ chối các yêu cầu ghi trực tiếp thiếu bí mật. Các yêu cầu đọc công khai tiếp tục đi tới Apps Script.
+
 ## Chỉnh sửa thiệp
 
 - Sửa nội dung, ngày giờ, địa chỉ, nhạc và QR trong `public/config.js`.

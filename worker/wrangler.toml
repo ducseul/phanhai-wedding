@@ -1,0 +1,19 @@
+name = "phanhai-wedding-submit"
+main = "index.js"
+compatibility_date = "2026-11-22"
+workers_dev = true
+preview_urls = false
+
+[vars]
+SITE_ORIGIN = "https://phanhai-thanhhoai.io.vn"
+APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhg4v1_zrO048IjklDIF7EvT8-DX_JDztAZvCoXNdxC3v_fwbf_ivyeASBu_9mfJQ-/exec"
+
+[[ratelimits]]
+name = "TEXT_LIMIT"
+namespace_id = "412601"
+simple = { limit = 6, period = 60 }
+
+[[ratelimits]]
+name = "PHOTO_LIMIT"
+namespace_id = "412602"
+simple = { limit = 20, period = 60 }

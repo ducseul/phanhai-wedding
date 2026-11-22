@@ -1,5 +1,6 @@
 window.weddingApi = async function (action, body, params = {}) {
-  const endpoint = window.WEDDING.sheetsEndpoint;
+  const { sheetsEndpoint, submitEndpoint } = window.WEDDING;
+  const endpoint = body ? submitEndpoint || sheetsEndpoint : sheetsEndpoint;
   if (!endpoint) throw new Error("Thiệp đang kết nối kho dữ liệu. Vui lòng thử lại sau.");
   const url = new URL(endpoint);
   if (!body) url.search = new URLSearchParams({ action, ...params });
