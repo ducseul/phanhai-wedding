@@ -49,11 +49,14 @@
   // ---------- Khung 1 ----------
   const main = events.find((e) => e.main) || events[0];
   const others = events.filter((e) => e !== main);
-  const fam = (label, f) => `<p class="family-label">${label}</p><p class="family-name">${esc(f.father)}</p><p class="family-name">${esc(f.mother)}</p><p class="family-addr">${esc(f.address)}</p>`;
+  const fam = (label, f) => `
+    <p class="family-label">${label}</p>
+    <p class="family-name"><span class="family-title">Ông:</span> ${esc(f.father)}</p>
+    <p class="family-name"><span class="family-title">Bà:</span> ${esc(f.mother)}</p>
+    <p class="family-addr">${esc(f.address)}</p>`;
   $("#main-title").textContent = main.panelTitle;
   $("#fam-groom").innerHTML = fam("Nhà Trai", C.groomFamily);
   $("#fam-bride").innerHTML = fam("Nhà Gái", C.brideFamily);
-  $("#announce").innerHTML = esc(C.announce).replace(/\n/g, "<br>");
   $("#groom-full").textContent = C.groom.fullName;
   $("#groom-order").textContent = C.groom.order;
   $("#bride-full").textContent = C.bride.fullName;
@@ -67,20 +70,27 @@
       </div></div>`;
   $("#main-event").innerHTML = eventHTML(main);
 
+  const [invitationLabel, ...invitationText] = C.invitation || [];
+  if (invitationLabel) {
+    const invitationClosing = invitationText.pop();
+    $("#invitation").innerHTML = `
+      <p class="invitation-label">${esc(invitationLabel)}</p>
+      ${invitationText.map((text) => `<p class="invitation-text">${esc(text)}</p>`).join("")}
+      <p class="invitation-closing">${esc(invitationClosing)}</p>`;
+  }
+
   // ---------- Khung 2 ----------
-  $("#second-title").textContent = others.length ? others[0].panelTitle : "Cùng đếm ngược ngày vui";
+  if (others.length) $("#second-title").textContent = others[0].panelTitle;
+  else $("#second-title").innerHTML = "Cùng đếm ngược tới<br>lễ thành hôn";
   $("#other-events").innerHTML = others.map(eventHTML).join("");
 
   // Đếm ngược tới lễ gần nhất chưa kết thúc
   const sorted = [...events].sort((a, b) => a.s - b.s);
   const cd = { d: $("#cd-d"), h: $("#cd-h"), m: $("#cd-m"), s: $("#cd-s") };
-  const label = $("#countdown-label");
   function tick() {
     const now = new Date();
     const t = sorted.find((e) => e.e > now);
-    if (!t) { label.textContent = "Cảm ơn quý khách đã chung vui cùng gia đình!"; Object.values(cd).forEach((x) => (x.textContent = "00")); return; }
-    if (now >= t.s) { label.textContent = `${t.title} đang diễn ra`; Object.values(cd).forEach((x) => (x.textContent = "00")); return; }
-    label.textContent = `Cùng đếm ngược tới ${t.title.toLowerCase()}`;
+    if (!t || now >= t.s) { Object.values(cd).forEach((x) => (x.textContent = "00")); return; }
     let s = Math.floor((t.s - now) / 1000);
     const d = Math.floor(s / 86400); s %= 86400;
     const h = Math.floor(s / 3600); s %= 3600;

@@ -26,8 +26,15 @@ window.WEDDING = {
     address: "Xóm Thượng Sơn 4 - Văn Hiến - Nghệ An",  // SỬA
   },
 
+  // ---------- Lời mời ----------
+  invitation: [
+    "INVITATION",
+    "Gửi đến gia đình và bạn bè thân mến,",
+    "Cảm ơn bạn đã dành thời gian quý báu để cùng chúng mình chung vui trong ngày đặc biệt này. Chúng mình vô cùng biết ơn vì luôn có sự đồng hành và ủng hộ của bạn, và thật vinh hạnh khi được chia sẻ niềm hạnh phúc của chúng mình cùng bạn.",
+    "Trân trọng kính mời bạn đến dự lễ cưới của chúng mình",
+  ],
+
   // ---------- Cô dâu chú rể ----------
-  announce: "Trân trọng báo tin\nLễ thành hôn của con chúng tôi",
   groom: { fullName: "Phan Hải", order: "Trưởng Nam" }, // SỬA
   bride: { fullName: "Thanh Hoài", order: "Trưởng Nữ" },      // SỬA
 
@@ -41,7 +48,7 @@ window.WEDDING = {
       main: true,
       panelTitle: "Thông tin lễ thành hôn",
       title: "Lễ thành hôn", // tên ngắn, dùng cho lịch / đếm ngược
-      heading: "Lễ thành hôn được cử hành tại Khách Sạn Anh Thanh ĐÔ",
+      heading: "Lễ thành hôn được tổ chức tại Khách Sạn Anh Thanh ĐÔ",
       start: "2026-11-28T11:00:00+07:00", // SỬA
       end: "2026-11-28T14:00:00+07:00",   // SỬA
       lunar: "(Tức ngày 20 tháng 10 năm Bính Ngọ)", // SỬA
